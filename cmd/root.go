@@ -27,7 +27,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "test",
+	Use:   "webterminal",
 	Short: "Web Terminal",
 	Long:  `Web Terminal`,
 	// Uncomment the following line if your bare application

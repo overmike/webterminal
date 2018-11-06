@@ -1,3 +1,5 @@
 *.pb.go
 
+vendor/
+
 webterminal
