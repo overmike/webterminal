@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package terminal;
+
+message SessionRequest {
+    string message = 1;
+}
+
+message SessionResponse {
+    string message = 1;
+}
+
+service terminal {
+    rpc Session (stream SessionRequest) returns (stream SessionResponse);
+}
