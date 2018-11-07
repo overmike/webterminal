@@ -1,0 +1,28 @@
+{
+  "name": "webterminal",
+  "version": "0.0.1",
+  "description": "Web Terminal",
+  "main": "index.js",
+  "repository": "github.com/overmike/webterminal",
+  "author": "Mike Lee <eemike@gmail.com>",
+  "license": "Apache2",
+  "scripts": {
+    "build": "webpack -p --env production",
+    "start": "webpack && webpack-dev-server",
+    "stats": "webpack -p --env production --profile --json > dist/stats.json && webpack-bundle-analyzer dist/stats.json",
+    "test": "jest",
+    "clean": "rimraf dist/*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.1.5",
+    "babel-loader": "^8.0.4",
+    "eslint": "^5.8.0",
+    "jest": "^23.6.0",
+    "rimraf": "^2.6.2",
+    "webpack": "^4.25.1",
+    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
+}
