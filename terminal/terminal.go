@@ -9,16 +9,9 @@ import (
 // Service serve the terminal session
 type Service struct{}
 
+// Session rpc manage streaming session between client and server
 func (*Service) Session(session Terminal_SessionServer) error {
 	logrus.Info("Session created")
-	err := session.Send(&SessionResponse{Message: "Terminal Init"})
-	if err == io.EOF {
-		logrus.Info("Session closed from client")
-		return nil
-	}
-	if err != nil {
-		return err
-	}
 
 	for {
 		req, err := session.Recv()
@@ -45,5 +38,4 @@ func (*Service) Session(session Terminal_SessionServer) error {
 		}
 	}
 
-	return nil
 }
