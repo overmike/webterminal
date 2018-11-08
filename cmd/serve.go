@@ -15,9 +15,13 @@
 package cmd
 
 import (
+	"context"
 	"net"
+	"net/http"
 
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/sirupsen/logrus"
+	"github.com/tmc/grpc-websocket-proxy/wsproxy"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -36,6 +40,8 @@ var serveCmd = &cobra.Command{
 }
 
 func runServer() {
+	mux := runtime.NewServeMux()
+
 	port := ":50051"
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
@@ -46,10 +52,24 @@ func runServer() {
 	terminal.RegisterTerminalServer(s, &terminal.Service{})
 	reflection.Register(s)
 	logrus.Info("Starting Web Terminal")
-	if err := s.Serve(lis); err != nil {
-		logrus.Fatalf("failed to serve: %v", err)
-	}
+	go func() {
+		logrus.Info("Starting Web Terminal GRPC Server")
+		if err := s.Serve(lis); err != nil {
+			logrus.Fatalf("failed to serve: %v", err)
+			return
+		}
+	}()
 
+	err = terminal.RegisterTerminalHandlerFromEndpoint(context.Background(), mux, ":50051", []grpc.DialOption{grpc.WithInsecure()})
+	if err != nil {
+		logrus.Fatalf("Failed to register grpc gateway mux: %v", err)
+		return
+	}
+	logrus.Info("Starting Web Terminal WebSocket Server")
+	err = http.ListenAndServe(":8081", wsproxy.WebsocketProxy(mux))
+	if err != nil {
+		logrus.Fatalf("Listen grpc gateway with mux err: %v", err)
+	}
 }
 
 func init() {

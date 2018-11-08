@@ -10,15 +10,27 @@
 [[projects]]
   name = "github.com/golang/protobuf"
   packages = [
+    "jsonpb",
     "proto",
     "protoc-gen-go/descriptor",
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
+    "ptypes/struct",
     "ptypes/timestamp"
   ]
   revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
   version = "v1.2.0"
+
+[[projects]]
+  name = "github.com/grpc-ecosystem/grpc-gateway"
+  packages = [
+    "runtime",
+    "runtime/internal",
+    "utilities"
+  ]
+  revision = "aeab1d96e0f1368d243e2e5f526aa29d495517bb"
+  version = "v1.5.1"
 
 [[projects]]
   name = "github.com/hashicorp/hcl"
@@ -136,7 +148,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "10aee181995363b41f712a55844a0dd52ea04646"
+  revision = "1c5f79cfb1642860bbe00b6cfce66700c01e04f6"
 
 [[projects]]
   branch = "master"
@@ -145,7 +157,7 @@
     "unix",
     "windows"
   ]
-  revision = "3a76605856fddce5718553cbb8bd50ca492a7274"
+  revision = "66b7b1311ac80bbafcd2daeef9a5e6e2cd1e2399"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -171,8 +183,11 @@
 [[projects]]
   branch = "master"
   name = "google.golang.org/genproto"
-  packages = ["googleapis/rpc/status"]
-  revision = "c830210a61dfaa790e1920f8d0470fc27bc2efbe"
+  packages = [
+    "googleapis/api/annotations",
+    "googleapis/rpc/status"
+  ]
+  revision = "5fc9ac5403620be16bcdb0c8e7644b1178472c3b"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -218,6 +233,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f54f20fc02cbb136b806a47b20b03519676634151512a8a94380496955133833"
+  inputs-digest = "ffec3b3a8527b4aa5de94036b105cfe552ff0f66da55b90f9184f0391b7e8fd3"
   solver-name = "gps-cdcl"
   solver-version = 1

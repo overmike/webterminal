@@ -3,8 +3,11 @@ webterminal: proto vendor
 	go build
 
 proto:
-	protoc -I ./pb/ --go_out=plugins=grpc:terminal/ pb/terminal.proto
-
+	protoc -I/usr/local/include -I./pb/ \
+		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--go_out=plugins=grpc:terminal/ \
+		--grpc-gateway_out=logtostderr=true:terminal/ \
+		pb/terminal.proto
 vendor:
 	dep ensure -v
 
