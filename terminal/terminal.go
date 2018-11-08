@@ -23,10 +23,7 @@ func (*Service) Session(session Terminal_SessionServer) error {
 			return err
 		}
 
-		if req.Message == "close" {
-			logrus.Info("Client request to close the session, closing from server...")
-			return nil
-		}
+		logrus.Debugf("Request string : %v", req.Message)
 		res := &SessionResponse{Message: req.Message}
 		sendErr := session.Send(res)
 		if sendErr == io.EOF {

@@ -23,6 +23,12 @@
   version = "v1.2.0"
 
 [[projects]]
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
   name = "github.com/grpc-ecosystem/grpc-gateway"
   packages = [
     "runtime",
@@ -132,6 +138,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/tmc/grpc-websocket-proxy"
+  packages = ["wsproxy"]
+  revision = "830351dc03c6f07d625727d5f993a463babb20e1"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
   revision = "e4dc69e5b2fd71dcaf8bd5d054eb936deb78d1fa"
@@ -233,6 +245,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ffec3b3a8527b4aa5de94036b105cfe552ff0f66da55b90f9184f0391b7e8fd3"
+  inputs-digest = "b0be3d5ff13e6c60678284feda4011997ed1cccaaf15ecc65c1ca0ce1f91767e"
   solver-name = "gps-cdcl"
   solver-version = 1
