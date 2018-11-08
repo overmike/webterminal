@@ -1,4 +1,6 @@
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const path = require('path');
 
 module.exports = (env) => {
@@ -13,19 +15,21 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.jsx?$/, use: 'babel-loader', exclude: path.join(__dirname, 'node_modules/') },
+                { test: /\.js$/, use: 'babel-loader', exclude: path.join(__dirname, 'node_modules/') },
                 { test: /\.s?css$/, use: [ 'style-loader', 'css-loader', 'sass-loader' ]},
             ]
         },
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: 'src/index.ejs',
+                filename: 'index.html',
+                inject: true,
+            }),
+        ],
         devServer: {
             contentBase: path.join(__dirname, "dist"),
             compress: true,
-            port: 8081,
-            proxy: {
-                "/graphql": {
-                    target: "http://localhost:5000"
-                }
-            }
+            port: 8080,
         },
         devtool: isProduction ? 'source-map' : 'cheap-module-eval-source-map'
     }
