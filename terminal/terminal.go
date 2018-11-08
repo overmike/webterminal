@@ -23,16 +23,31 @@ func (*Service) Session(session Terminal_SessionServer) error {
 			return err
 		}
 
-		logrus.Debugf("Request string : %v", req.Message)
-		res := &SessionResponse{Message: req.Message}
-		sendErr := session.Send(res)
-		if sendErr == io.EOF {
-			logrus.Info("Client closed the session")
-			return nil
-		} else if sendErr != nil {
-			logrus.Errorf("Sending error :%v", sendErr)
-			return sendErr
+		switch command := req.Command.(type) {
+		case *SessionRequest_Message:
+			{
+				msg := command.Message
+				logrus.Debugf("Request string : %v", msg)
+				res := &SessionResponse{Message: msg}
+				sendErr := session.Send(res)
+				if sendErr == io.EOF {
+					logrus.Info("Client closed the session")
+					return nil
+				} else if sendErr != nil {
+					logrus.Errorf("Sending error :%v", sendErr)
+					return sendErr
+				}
+			}
+		case *SessionRequest_Resize:
+			{
+				resize := command.Resize
+				logrus.Infof("Request to resize columns %v, rows %v", resize.Columns, resize.Rows)
+			}
+		case nil:
+		default:
+			logrus.Warn("Empty SessionRequest command")
 		}
+
 	}
 
 }

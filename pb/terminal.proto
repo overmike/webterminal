@@ -3,8 +3,16 @@ import "google/api/annotations.proto";
 
 package terminal;
 
+message TerminalResize {
+    int32 columns = 1;
+    int32 rows = 2;
+}
+
 message SessionRequest {
-    string message = 1;
+    oneof command {
+        string message = 1;
+        TerminalResize resize = 2;
+    }
 }
 
 message SessionResponse {
