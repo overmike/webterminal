@@ -2,16 +2,42 @@ package terminal
 
 import (
 	"io"
+	"os/exec"
 
+	"github.com/kr/pty"
 	"github.com/sirupsen/logrus"
 )
 
 // Service serve the terminal session
 type Service struct{}
 
+type SessionWriter struct {
+	session Terminal_SessionServer
+}
+
+func (s *SessionWriter) Write(p []byte) (int, error) {
+	res := &SessionResponse{Message: string(p)}
+	err := s.session.Send(res)
+	if err != nil {
+		return 0, err
+	}
+
+	return len(p), err
+}
+
 // Session rpc manage streaming session between client and server
 func (*Service) Session(session Terminal_SessionServer) error {
 	logrus.Info("Session created")
+
+	c := exec.Command("bash")
+	ptmx, err := pty.Start(c)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = ptmx.Close() }()
+
+	sWriter := &SessionWriter{session: session}
+	go func() { io.Copy(sWriter, ptmx) }()
 
 	for {
 		req, err := session.Recv()
@@ -28,20 +54,17 @@ func (*Service) Session(session Terminal_SessionServer) error {
 			{
 				msg := command.Message
 				logrus.Debugf("Request string : %v", msg)
-				res := &SessionResponse{Message: msg}
-				sendErr := session.Send(res)
-				if sendErr == io.EOF {
-					logrus.Info("Client closed the session")
-					return nil
-				} else if sendErr != nil {
-					logrus.Errorf("Sending error :%v", sendErr)
-					return sendErr
+				_, err := ptmx.Write([]byte(msg))
+				if err != nil {
+					return err
 				}
 			}
 		case *SessionRequest_Resize:
 			{
 				resize := command.Resize
 				logrus.Infof("Request to resize columns %v, rows %v", resize.Columns, resize.Rows)
+				ws := &pty.Winsize{Cols: uint16(resize.Columns), Rows: uint16(resize.Rows)}
+				pty.Setsize(ptmx, ws)
 			}
 		case nil:
 		default:
