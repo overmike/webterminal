@@ -10,9 +10,19 @@ class channel {
         this.ws.send(text)
     }
 
+    resize = (cols, rows) => {
+        const resizeCmd = JSON.stringify({
+            resize: {
+                columns: cols,
+                rows: rows
+            }
+        })
+        this.ws.send(resizeCmd)
+    }
+
     onmessage = (event) => {
         const text = JSON.parse(event.data);
-        this.notifyexternal(text);
+        this.notifyexternal(text.result.message);
     }
 
 }

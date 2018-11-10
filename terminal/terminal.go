@@ -2,6 +2,7 @@ package terminal
 
 import (
 	"io"
+	"os"
 	"os/exec"
 
 	"github.com/kr/pty"
@@ -30,11 +31,24 @@ func (*Service) Session(session Terminal_SessionServer) error {
 	logrus.Info("Session created")
 
 	c := exec.Command("bash")
+	c.Env = append(os.Environ())
 	ptmx, err := pty.Start(c)
 	if err != nil {
 		return err
 	}
-	defer func() { _ = ptmx.Close() }()
+	defer func() {
+		err = ptmx.Close()
+		if err != nil {
+			logrus.Errorf("Failed to close ptmx %v", err)
+		} else {
+			logrus.Info("Closing ptmx")
+		}
+		err := c.Wait()
+		if err != nil {
+			logrus.Errorf("Command wait fail : %v", err)
+		}
+		logrus.Info("Closed command")
+	}()
 
 	sWriter := &SessionWriter{session: session}
 	go func() { io.Copy(sWriter, ptmx) }()

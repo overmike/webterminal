@@ -20,7 +20,7 @@ io.sendString = (data) => {
     chan.send(data)
 }
 io.onTerminalResize = (columns, rows) => {
-    console.log("Columns " + columns + " rows " + rows)
+    chan.resize(columns, rows)
 };
 term.installKeyboard()
 
