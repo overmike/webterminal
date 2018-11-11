@@ -19,6 +19,7 @@ import (
 	"net"
 	"net/http"
 
+	rice "github.com/GeertJohan/go.rice"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
@@ -66,7 +67,14 @@ func runServer() {
 		return
 	}
 	logrus.Info("Starting Web Terminal WebSocket Server")
-	err = http.ListenAndServe(":8081", wsproxy.WebsocketProxy(mux))
+	box, err := rice.FindBox("../js/dist/")
+	if err != nil {
+		logrus.Fatalf("can't find rich box %v", err)
+		return
+	}
+	http.Handle("/terminal", wsproxy.WebsocketProxy(mux))
+	http.Handle("/", http.FileServer(box.HTTPBox()))
+	err = http.ListenAndServe(":8081", nil)
 	if err != nil {
 		logrus.Fatalf("Listen grpc gateway with mux err: %v", err)
 	}

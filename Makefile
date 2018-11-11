@@ -18,4 +18,14 @@ proto:
 vendor:
 	dep ensure -v
 
+
+web:
+	yarn --cwd js build
+
+rice:
+	go get -u github.com/GeertJohan/go.rice/rice
+
+asset: web
+	rice -i github.com/overmike/webterminal/cmd embed-go
+
 .PHONY: proto_gen proto vendor
