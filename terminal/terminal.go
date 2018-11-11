@@ -2,7 +2,6 @@ package terminal
 
 import (
 	"io"
-	"os"
 	"os/exec"
 
 	"github.com/kr/pty"
@@ -31,7 +30,7 @@ func (*Service) Session(session Terminal_SessionServer) error {
 	logrus.Info("Session created")
 
 	c := exec.Command("bash")
-	c.Env = append(os.Environ())
+	c.Env = append([]string{})
 	ptmx, err := pty.Start(c)
 	if err != nil {
 		return err
