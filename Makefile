@@ -20,6 +20,7 @@ vendor:
 
 
 web:
+	yarn --cwd js
 	yarn --cwd js build
 
 rice:

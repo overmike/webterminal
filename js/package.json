@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "github.com/overmike/webterminal",
   "author": "Mike Lee <eemike@gmail.com>",
-  "license": "Apache2",
+  "license": "Apache-2.0",
   "scripts": {
     "build": "webpack -p --env production",
     "start": "webpack && webpack-dev-server",
