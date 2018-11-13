@@ -1,5 +1,7 @@
 # Web Terminal
 
+[![CircleCI](https://circleci.com/gh/overmike/webterminal.svg?style=svg)](https://circleci.com/gh/overmike/webterminal)
+
 ```
 This is an experimental repo, use at your own risk
 ```
