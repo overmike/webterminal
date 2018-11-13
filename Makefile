@@ -29,4 +29,7 @@ rice:
 asset: web
 	rice -i github.com/overmike/webterminal/cmd embed-go
 
+docker:
+	docker build -t overmike/webterminal .
+
 .PHONY: proto_gen proto vendor
