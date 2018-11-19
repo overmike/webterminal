@@ -1,6 +1,11 @@
 
+VERSION := $(shell git describe --always --long --dirty --tag)
+
 webterminal:
-	go build
+	go build -v -ldflags="-X github.com/overmike/webterminal/cmd.version=${VERSION}"
+
+clean:
+	rm webterminal
 
 proto_gen:
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
