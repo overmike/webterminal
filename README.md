@@ -1,6 +1,7 @@
 # Web Terminal
 
 [![CircleCI](https://circleci.com/gh/overmike/webterminal.svg?style=svg)](https://circleci.com/gh/overmike/webterminal)
+[![Build Status](https://travis-ci.org/overmike/webterminal.svg?branch=master)](https://travis-ci.org/overmike/webterminal)
 
 ```
 This is an experimental repo, use at your own risk

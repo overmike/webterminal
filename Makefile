@@ -1,5 +1,5 @@
 
-webterminal: vendor
+webterminal:
 	go build
 
 proto_gen:
