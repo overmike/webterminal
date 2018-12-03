@@ -39,4 +39,4 @@ asset: web
 docker:
 	docker build --build-arg LDFLAGS="${LDFLAGS}" -t overmike/webterminal .
 
-.PHONY: proto_gen proto vendor
+.PHONY: proto_gen proto
