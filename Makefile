@@ -5,7 +5,7 @@ VERSION := $(shell git describe --always --long --dirty --tag)
 EXTRA_LDFLAGS := 
 LDFLAGS := -X github.com/overmike/webterminal/cmd.version=${VERSION} ${EXTRA_LDFLAGS}
 
-webterminal: vendor
+webterminal:
 	go build -v -ldflags="${LDFLAGS}"
 
 clean:
@@ -24,12 +24,6 @@ proto:
 		--swagger_out=logtostderr=true:terminal/ \
 		pb/terminal.proto
 
-dep:
-	go get -u github.com/golang/dep/cmd/dep
-
-vendor:
-	@echo "Assume you have dep installed, if not please run 'make dep'"
-	dep ensure -v --vendor-only
 
 
 web:
