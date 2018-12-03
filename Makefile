@@ -1,8 +1,12 @@
 
 VERSION := $(shell git describe --always --long --dirty --tag)
 
-webterminal:
-	go build -v -ldflags="-X github.com/overmike/webterminal/cmd.version=${VERSION}"
+#EXTRA_LDFLAGS := -s -w
+EXTRA_LDFLAGS := 
+LDFLAGS := -X github.com/overmike/webterminal/cmd.version=${VERSION} ${EXTRA_LDFLAGS}
+
+webterminal: vendor
+	go build -v -ldflags="${LDFLAGS}"
 
 clean:
 	rm webterminal
@@ -20,8 +24,12 @@ proto:
 		--swagger_out=logtostderr=true:terminal/ \
 		pb/terminal.proto
 
+dep:
+	go get -u github.com/golang/dep/cmd/dep
+
 vendor:
-	dep ensure -v
+	@echo "Assume you have dep installed, if not please run 'make dep'"
+	dep ensure -v --vendor-only
 
 
 web:
@@ -35,6 +43,6 @@ asset: web
 	rice -i github.com/overmike/webterminal/cmd embed-go
 
 docker:
-	docker build -t overmike/webterminal .
+	docker build --build-arg LDFLAGS="${LDFLAGS}" -t overmike/webterminal .
 
 .PHONY: proto_gen proto vendor
