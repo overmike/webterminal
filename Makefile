@@ -1,9 +1,10 @@
 
 VERSION := $(shell git describe --always --long --dirty --tag)
+REPO := overmike/webterminal
 
 #EXTRA_LDFLAGS := -s -w
 EXTRA_LDFLAGS := 
-LDFLAGS := -X github.com/overmike/webterminal/cmd.version=${VERSION} ${EXTRA_LDFLAGS}
+LDFLAGS := -X github.com/${REPO}/cmd.version=${VERSION} ${EXTRA_LDFLAGS}
 
 webterminal:
 	go build -v -ldflags="${LDFLAGS}"
@@ -34,9 +35,11 @@ rice:
 	go get -u github.com/GeertJohan/go.rice/rice
 
 asset: web
-	rice -i github.com/overmike/webterminal/cmd embed-go
+	rice -i github.com/${REPO}/cmd embed-go
 
 docker:
-	docker build --build-arg LDFLAGS="${LDFLAGS}" -t overmike/webterminal .
+	docker build --build-arg LDFLAGS="${LDFLAGS}" --target builder -t ${REPO}:builder .
+	docker build --build-arg LDFLAGS="${LDFLAGS}" -t ${REPO} .
+	docker tag ${REPO} ${REPO}:${VERSION}
 
 .PHONY: proto_gen proto
