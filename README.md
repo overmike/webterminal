@@ -29,8 +29,8 @@ You can then access browser 8081 port for web terminal
 ## go gettable package
 In order to make it go gettable, we bundle the webpack build into go binary through github.com/GeertJohan/go.rice
 
-## golang Vendoring
-We are opinionated, we choose NOT to commit vendor directory but use golang dep Gopkg.toml/Gopkg.lock with "dep ensure --vendor-only" to manage dependences 
+## golang module
+We now change to use golang module which means you need to build by golang v1.11+
 
 details see 
 https://github.com/golang/dep/blob/master/docs/FAQ.md#should-i-commit-my-vendor-directory
