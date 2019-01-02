@@ -1,10 +1,11 @@
 
-VERSION := $(shell git describe --always --long --dirty --tag)
+VERSION := $(shell git describe --always --dirty --tag)
+COMMIT := $(shell git describe --always --long)
 REPO := overmike/webterminal
 
 #EXTRA_LDFLAGS := -s -w
 EXTRA_LDFLAGS := 
-LDFLAGS := -X github.com/${REPO}/cmd.version=${VERSION} ${EXTRA_LDFLAGS}
+LDFLAGS := -X github.com/${REPO}/cmd.version=${VERSION} -X github.com/${REPO}/cmd.commit=${COMMIT} ${EXTRA_LDFLAGS}
 
 webterminal:
 	go build -v -ldflags="${LDFLAGS}"

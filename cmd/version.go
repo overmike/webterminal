@@ -20,6 +20,7 @@ import (
 )
 
 var version = "unversioned"
+var commit = "unknown"
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
@@ -27,7 +28,7 @@ var versionCmd = &cobra.Command{
 	Short: "version command",
 	Long:  `version command`,
 	Run: func(cmd *cobra.Command, args []string) {
-		logrus.Infof("WebTerminal version %v", version)
+		logrus.Infof("WebTerminal version %v commit %v", version, commit)
 	},
 }
 
