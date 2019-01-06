@@ -32,10 +32,3 @@ In order to make it go gettable, we bundle the webpack build into go binary thro
 ## golang module
 We now change to use golang module which means you need to build by golang v1.11+
 
-details see 
-https://github.com/golang/dep/blob/master/docs/FAQ.md#should-i-commit-my-vendor-directory
-https://github.com/golang/dep/blob/master/docs/FAQ.md#how-do-i-use-dep-with-docker
-
-
-## Makefile
-....
