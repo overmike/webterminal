@@ -61,7 +61,7 @@ func runServer() {
 		}
 	}()
 
-	err = terminal.RegisterTerminalHandlerFromEndpoint(context.Background(), mux, ":50051", []grpc.DialOption{grpc.WithInsecure()})
+	err = terminal.RegisterTerminalHandlerFromEndpoint(context.Background(), mux, "127.0.0.1:50051", []grpc.DialOption{grpc.WithInsecure()})
 	if err != nil {
 		logrus.Fatalf("Failed to register grpc gateway mux: %v", err)
 		return
