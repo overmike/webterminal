@@ -2,23 +2,29 @@ module github.com/overmike/webterminal
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
-	github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da
+	github.com/GeertJohan/go.incremental v0.0.0-20161212213043-1172aab96510 // indirect
+	github.com/GeertJohan/go.rice v0.0.0-20181229193832-0af3f3b09a0a
+	github.com/akavel/rsrc v0.0.0-20170831122431-f6a15ece2cfd // indirect
 	github.com/daaku/go.zipexe v0.0.0-20150329023125-a5fe2436ffcb // indirect
 	github.com/golang/protobuf v1.2.0
 	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.6.3
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/jessevdk/go-flags v1.4.0 // indirect
 	github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kr/pty v1.1.3
 	github.com/mitchellh/go-homedir v1.0.0
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
+	github.com/nkovacs/streamquote v0.0.0-20170412213628-49af9bddb229 // indirect
 	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/cast v1.3.0 // indirect
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/spf13/viper v1.2.1
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20171017195756-830351dc03c6
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasttemplate v0.0.0-20170224212429-dcecefd839c4 // indirect
 	golang.org/x/crypto v0.0.0-20181106171534-e4dc69e5b2fd // indirect
 	golang.org/x/net v0.0.0-20181201002055-351d144fa1fc
 	golang.org/x/sync v0.0.0-20181108010431-42b317875d0f // indirect

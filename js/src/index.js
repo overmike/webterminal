@@ -6,11 +6,21 @@ import {
 
 import channel from './protocol';
 
+var loc = window.location,
+    wsUri;
+if (loc.protocol === "https:") {
+    wsUri = "wss:";
+} else {
+    wsUri = "ws:";
+}
+wsUri += "//" + loc.host;
+wsUri += loc.pathname + "terminal";
+
 hterm.defaultStorage = new lib.Storage.Memory();
 const term = new hterm.Terminal();
 term.decorate(document.querySelector('#terminal'))
 const io = term.io.push()
-const chan = new channel("ws://localhost:8081/terminal", (text) => {
+const chan = new channel(wsUri, (text) => {
     io.print(text)
 });
 io.onVTKeystroke = (data) => {
