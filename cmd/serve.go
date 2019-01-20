@@ -36,17 +36,31 @@ var serveCmd = &cobra.Command{
 	Short: "Run Web Terminal Server",
 	Long:  `Run Web Terminal Server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		runServer()
+		runServer(serveOptions)
 	},
 }
 
-func runServer() {
+type ServerOptions struct {
+	BindAddr string
+	Insecure bool
+	CertFile string
+	KeyFile  string
+}
+
+type ServeOptions struct {
+	WebSocketServer ServerOptions
+	GrpcServer      ServerOptions
+	Debug           bool
+}
+
+var serveOptions ServeOptions
+
+func runServer(serveOptions ServeOptions) {
 	mux := runtime.NewServeMux()
 
-	port := ":50051"
-	lis, err := net.Listen("tcp", port)
+	lis, err := net.Listen("tcp", serveOptions.GrpcServer.BindAddr)
 	if err != nil {
-		logrus.Fatalf("failed to listen on %v:%v", port, err)
+		logrus.Fatalf("failed to listen on %v, %v", serveOptions.GrpcServer.BindAddr, err)
 		return
 	}
 	s := grpc.NewServer()
@@ -54,19 +68,19 @@ func runServer() {
 	reflection.Register(s)
 	logrus.Info("Starting Web Terminal")
 	go func() {
-		logrus.Info("Starting Web Terminal GRPC Server")
+		logrus.Infof("Starting Web Terminal GRPC Server %v", serveOptions.GrpcServer.BindAddr)
 		if err := s.Serve(lis); err != nil {
 			logrus.Fatalf("failed to serve: %v", err)
 			return
 		}
 	}()
 
-	err = terminal.RegisterTerminalHandlerFromEndpoint(context.Background(), mux, "127.0.0.1:50051", []grpc.DialOption{grpc.WithInsecure()})
+	err = terminal.RegisterTerminalHandlerFromEndpoint(context.Background(), mux, serveOptions.GrpcServer.BindAddr, []grpc.DialOption{grpc.WithInsecure()})
 	if err != nil {
 		logrus.Fatalf("Failed to register grpc gateway mux: %v", err)
 		return
 	}
-	logrus.Info("Starting Web Terminal WebSocket Server")
+	logrus.Infof("Starting Web Terminal WebSocket Server %v", serveOptions.WebSocketServer.BindAddr)
 	box, err := rice.FindBox("../js/dist/")
 	if err != nil {
 		logrus.Fatalf("can't find rich box %v", err)
@@ -74,22 +88,27 @@ func runServer() {
 	}
 	http.Handle("/terminal", wsproxy.WebsocketProxy(mux))
 	http.Handle("/", http.FileServer(box.HTTPBox()))
-	err = http.ListenAndServe(":8081", nil)
-	if err != nil {
-		logrus.Fatalf("Listen grpc gateway with mux err: %v", err)
+	if serveOptions.WebSocketServer.Insecure {
+		err = http.ListenAndServe(serveOptions.WebSocketServer.BindAddr, nil)
+		if err != nil {
+			logrus.Fatalf("Listen grpc gateway with mux err: %v", err)
+		}
+	} else {
+		err = http.ListenAndServeTLS(serveOptions.WebSocketServer.BindAddr, serveOptions.WebSocketServer.CertFile, serveOptions.WebSocketServer.KeyFile, nil)
+		if err != nil {
+			logrus.Fatalf("Listen grpc gateway with mux err: %v", err)
+		}
 	}
 }
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
 
-	// Here you will define your flags and configuration settings.
+	serveCmd.Flags().StringVarP(&serveOptions.WebSocketServer.BindAddr, "addr", "a", ":8081", "API/WS Bind Address")
+	serveCmd.Flags().StringVarP(&serveOptions.GrpcServer.BindAddr, "grpc-addr", "g", "127.0.0.1:50051", "GRPC Bind Address")
+	serveCmd.Flags().BoolVarP(&serveOptions.WebSocketServer.Insecure, "insecure", "i", false, "Disable TLS")
+	serveCmd.Flags().BoolVarP(&serveOptions.Debug, "debug", "d", false, "Debug")
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// serveCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// serveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	serveCmd.Flags().StringVarP(&serveOptions.WebSocketServer.CertFile, "cert-file", "c", "~/.webterminal/cert.pem", "Certificate file path")
+	serveCmd.Flags().StringVarP(&serveOptions.WebSocketServer.KeyFile, "key-file", "k", "~/.webterminal/key.pem", "Key file path")
 }

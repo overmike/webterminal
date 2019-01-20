@@ -2,6 +2,11 @@ before:
   hooks:
     - go mod download
     - go generate ./...
+#    - go vet -shadow ./...
+    - go fmt ./...
+    - yarn --cwd js build
+    - go get github.com/GeertJohan/go.rice/rice
+    - rice -i github.com/overmike/webterminal/cmd embed-go
 builds:
 - env:
   - CGO_ENABLED=0
