@@ -12,10 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:generate yarn --cwd js build
+//go:generate go get github.com/GeertJohan/go.rice/rice
+//go:generate rice -i github.com/overmike/webterminal/cmd embed-go
+
 package main
 
-import "github.com/overmike/webterminal/cmd"
+import (
+	"github.com/overmike/webterminal/cmd"
+)
+
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func main() {
-	cmd.Execute()
+	cmd.Execute(version, commit, date)
 }
