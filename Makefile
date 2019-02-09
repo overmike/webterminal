@@ -17,11 +17,10 @@ proto_gen:
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 	go get -u github.com/golang/protobuf/protoc-gen-go
-	go get -u github.com/grpc-ecosystem/grpc-gateway
 
 proto:
 	protoc -I/usr/local/include -I./pb/ \
-		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I./pb/googleapis/ \
 		--go_out=plugins=grpc:terminal/ \
 		--grpc-gateway_out=logtostderr=true:terminal/ \
 		--swagger_out=logtostderr=true:terminal/ \
