@@ -35,7 +35,11 @@ func request_Terminal_Session_0(ctx context.Context, marshaler runtime.Marshaler
 		grpclog.Infof("Failed to start streaming: %v", err)
 		return nil, metadata, err
 	}
-	dec := marshaler.NewDecoder(req.Body)
+	newReader, berr := utilities.IOReaderFactory(req.Body)
+	if berr != nil {
+		return nil, metadata, berr
+	}
+	dec := marshaler.NewDecoder(newReader())
 	handleSend := func() error {
 		var protoReq SessionRequest
 		err := dec.Decode(&protoReq)
