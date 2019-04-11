@@ -39,6 +39,7 @@ asset: web
 	rice -i github.com/${REPO}/cmd embed-go
 
 docker:
+	docker build --build-arg LDFLAGS="${LDFLAGS}" --target assetbuilder -t ${REPO}:assetbuilder .
 	docker build --build-arg LDFLAGS="${LDFLAGS}" --target builder -t ${REPO}:builder .
 	docker build --build-arg LDFLAGS="${LDFLAGS}" -t ${REPO} .
 	docker tag ${REPO} ${REPO}:${VERSION}
