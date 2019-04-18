@@ -1,4 +1,4 @@
-FROM node:8.15.1 as assetbuilder
+FROM node:8.15.1-alpine as assetbuilder
 
 RUN npm i -g yarn@1.12.3
 
