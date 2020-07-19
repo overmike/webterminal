@@ -2,6 +2,7 @@ package terminal
 
 import (
 	"io"
+	"os"
 	"os/exec"
 
 	"github.com/kr/pty"
@@ -62,28 +63,33 @@ func (*Service) Session(session Terminal_SessionServer) error {
 			return err
 		}
 
-		switch command := req.Command.(type) {
-		case *SessionRequest_Message:
-			{
-				msg := command.Message
-				logrus.Debugf("Request string : %v", msg)
-				_, err := ptmx.Write([]byte(msg))
-				if err != nil {
-					return err
-				}
-			}
-		case *SessionRequest_Resize:
-			{
-				resize := command.Resize
-				logrus.Infof("Request to resize columns %v, rows %v", resize.Columns, resize.Rows)
-				ws := &pty.Winsize{Cols: uint16(resize.Columns), Rows: uint16(resize.Rows)}
-				pty.Setsize(ptmx, ws)
-			}
-		case nil:
-		default:
-			logrus.Warn("Empty SessionRequest command")
-		}
-
+		action(req, ptmx)
 	}
 
+}
+
+func action(req *SessionRequest, ptmx *os.File) error {
+	switch command := req.Command.(type) {
+	case *SessionRequest_Message:
+		{
+			msg := command.Message
+			logrus.Debugf("Request string : %v", msg)
+			_, err := ptmx.Write([]byte(msg))
+			if err != nil {
+				return err
+			}
+		}
+	case *SessionRequest_Resize:
+		{
+			resize := command.Resize
+			logrus.Infof("Request to resize columns %v, rows %v", resize.Columns, resize.Rows)
+			ws := &pty.Winsize{Cols: uint16(resize.Columns), Rows: uint16(resize.Rows)}
+			pty.Setsize(ptmx, ws)
+		}
+	case nil:
+	default:
+		logrus.Warn("Empty SessionRequest command")
+	}
+
+	return nil
 }

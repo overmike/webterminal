@@ -1,9 +1,13 @@
 language: go
 go:
-  - "1.11"
+  - "1.12"
 
 env:
   - GO111MODULE=on
+
+before_install:
+  - go mod download
+
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic
 
